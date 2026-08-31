@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Generated model files
+models/*.pkl
+models/*.joblib
+
+# Generated predictions
+data/predictions/
+
+# Raw/private datasets
+data/raw/
+data/external/
+
+# OS
+.DS_Store
+Thumbs.db
