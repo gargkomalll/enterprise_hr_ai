@@ -1,0 +1,6 @@
+dataset,rows,columns,duplicate_rows,missing_cells,memory_mb
+Attrition,1470,35,0,0,1.12
+Engagement,2845,28,0,0,3.77
+Occupation,1016,3,0,0,0.42
+Essential Skills,18200,15,0,9100,11.9
+Software Skills,31821,7,0,0,15.25
