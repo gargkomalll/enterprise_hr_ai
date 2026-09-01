@@ -24,278 +24,277 @@ st.set_page_config(
 )
 
 # ============================================================
-# DESIGN TOKENS
-# ------------------------------------------------------------
-# Concept: a "workforce ledger" — the visual language of a bound
-# annual report or personnel register, not a generic SaaS glass
-# panel. Deep ink-navy ground, warm paper-toned text, a single
-# gold ledger-stamp accent reserved for the signature moments,
-# and functional (not decorative) reds/ambers/teals for risk.
-# Display serif for headings, a plain-spoken sans for data and
-# body copy, tabular figures for anything numeric.
+# THEME CONFIGURATION & SIDEBAR MODE SELECTOR
 # ============================================================
-st.markdown("""
+st.sidebar.header("Appearance & Register Filters")
+theme_mode = st.sidebar.radio(
+    "Theme mode",
+    ["Dark Mode 🌙", "Light Mode ☀️"],
+    index=0,
+    key="theme_mode_radio"
+)
+
+is_dark = (theme_mode == "Dark Mode 🌙")
+
+if is_dark:
+    bg_color = "#12141b"
+    bg_raised = "#181b24"
+    surface_color = "#1d2029"
+    hairline_color = "rgba(201, 178, 140, 0.16)"
+    paper_color = "#eae5d8"
+    paper_dim_color = "#9299a6"
+    gold_color = "#c8a133"
+    gold_dim_color = "#8a7126"
+    risk_high_color = "#c1564c"
+    risk_med_color = "#c99a3c"
+    risk_low_color = "#4d9285"
+    plotly_bg = "#12141b"
+    plotly_paper = "#12141b"
+    plotly_grid = "rgba(201,178,140,0.12)"
+    gauge_step_high = "#4a2c28"
+    gauge_step_med = "#4a3d20"
+    gauge_step_low = "#2d4a44"
+else:
+    bg_color = "#f6f4ed"
+    bg_raised = "#ffffff"
+    surface_color = "#ffffff"
+    hairline_color = "rgba(100, 80, 40, 0.22)"
+    paper_color = "#1a1d24"
+    paper_dim_color = "#5a6270"
+    gold_color = "#b38600"
+    gold_dim_color = "#8a6400"
+    risk_high_color = "#b9382b"
+    risk_med_color = "#b8801f"
+    risk_low_color = "#2b7a6d"
+    plotly_bg = "#ffffff"
+    plotly_paper = "#f6f4ed"
+    plotly_grid = "rgba(0,0,0,0.08)"
+    gauge_step_high = "#fcd5d1"
+    gauge_step_med = "#fef0d2"
+    gauge_step_low = "#d3e8e4"
+
+st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 
-:root {
-    --ink-bg: #12141b;
-    --ink-bg-raised: #181b24;
-    --ink-surface: #1d2029;
-    --hairline: rgba(201, 178, 140, 0.16);
-    --paper: #eae5d8;
-    --paper-dim: #9299a6;
-    --gold: #c8a133;
-    --gold-dim: #8a7126;
-    --risk-high: #c1564c;
-    --risk-medium: #c99a3c;
-    --risk-low: #4d9285;
-    --cost-blue: #6f8fb5;
-}
+:root {{
+    --ink-bg: {bg_color};
+    --ink-bg-raised: {bg_raised};
+    --ink-surface: {surface_color};
+    --hairline: {hairline_color};
+    --paper: {paper_color};
+    --paper-dim: {paper_dim_color};
+    --gold: {gold_color};
+    --gold-dim: {gold_dim_color};
+    --risk-high: {risk_high_color};
+    --risk-medium: {risk_med_color};
+    --risk-low: {risk_low_color};
+}}
 
 html, body, .stApp,
 [data-testid="stAppViewContainer"],
 [data-testid="stMain"],
-.main {
-    background-color: var(--ink-bg) !important;
-    color: var(--paper);
+.main {{
+    background-color: {bg_color} !important;
+    color: {paper_color} !important;
     font-family: 'IBM Plex Sans', sans-serif;
-}
+}}
 
-/* Headings carry the institutional-report identity */
-h1, h2, h3, .ledger-heading {
+h1, h2, h3, .ledger-heading {{
     font-family: 'Source Serif 4', serif;
-    color: var(--paper);
+    color: {paper_color} !important;
     letter-spacing: 0.01em;
-}
+}}
 
-/* Main page title — deliberately oversized, the one signature moment */
 [data-testid="stAppViewContainer"] h1,
-[data-testid="stMain"] h1 {
+[data-testid="stMain"] h1 {{
     font-weight: 700;
     font-size: 3.4rem;
     line-height: 1.15;
-    border-bottom: 1px solid var(--hairline);
+    border-bottom: 1px solid {hairline_color};
     padding-bottom: 0.7rem;
     margin-bottom: 0.4rem;
-}
+}}
 
-h3 {
+h3 {{
     font-weight: 600;
     font-size: 1.15rem;
-}
+}}
 
-p, span, div, label {
-    color: var(--paper);
-}
+p, span, div, label {{
+    color: {paper_color} !important;
+}}
 
-/* -------------------------------------------------------
-   Top toolbar (the native Streamlit header strip holding
-   the "Deploy" button and the ⋮ menu) — was left on the
-   library's default light background; bring it into the
-   ledger palette so its controls are actually legible.
--------------------------------------------------------- */
-header[data-testid="stHeader"] {
-    background-color: var(--ink-bg) !important;
-    border-bottom: 1px solid var(--hairline);
-}
-header[data-testid="stHeader"] * {
-    color: var(--paper) !important;
-    fill: var(--paper) !important;
-}
+header[data-testid="stHeader"] {{
+    background-color: {bg_color} !important;
+    border-bottom: 1px solid {hairline_color};
+}}
+header[data-testid="stHeader"] * {{
+    color: {paper_color} !important;
+    fill: {paper_color} !important;
+}}
 [data-testid="stToolbar"] button,
-.stDeployButton button {
-    color: var(--paper) !important;
+.stDeployButton button {{
+    color: {paper_color} !important;
     background-color: transparent !important;
-}
-[data-testid="stToolbar"] button:hover {
-    background-color: var(--ink-surface) !important;
-}
-[data-testid="stDecoration"] { background-image: none !important; background-color: var(--gold) !important; }
+}}
+[data-testid="stToolbar"] button:hover {{
+    background-color: {surface_color} !important;
+}}
+[data-testid="stDecoration"] {{ background-image: none !important; background-color: {gold_color} !important; }}
 
-/* -------------------------------------------------------
-   Every text/number input, textarea and dropdown in the
-   app — including the chat box — was rendering on the
-   framework's default light surface, which made typed
-   text (light-on-light) unreadable. Force the ledger
-   surface + paper text everywhere a person can type.
--------------------------------------------------------- */
 input, textarea,
 div[data-baseweb="input"],
 div[data-baseweb="textarea"],
 div[data-baseweb="base-input"],
-div[data-baseweb="select"] > div {
-    background-color: var(--ink-surface) !important;
-    color: var(--paper) !important;
-    border-color: var(--hairline) !important;
-    caret-color: var(--paper) !important;
-}
-input::placeholder, textarea::placeholder {
-    color: var(--paper-dim) !important;
+div[data-baseweb="select"] > div {{
+    background-color: {surface_color} !important;
+    color: {paper_color} !important;
+    border-color: {hairline_color} !important;
+    caret-color: {paper_color} !important;
+}}
+input::placeholder, textarea::placeholder {{
+    color: {paper_dim_color} !important;
     opacity: 1;
-}
+}}
 
-/* Chat input specifically */
-[data-testid="stChatInput"] {
-    background-color: var(--ink-surface) !important;
-    border: 1px solid var(--hairline) !important;
-}
-[data-testid="stChatInput"] textarea {
+[data-testid="stChatInput"] {{
+    background-color: {surface_color} !important;
+    border: 1px solid {hairline_color} !important;
+}}
+[data-testid="stChatInput"] textarea {{
     background-color: transparent !important;
-    color: var(--paper) !important;
-}
-[data-testid="stChatInputSubmitButton"] {
-    background-color: var(--gold) !important;
-}
-[data-testid="stChatInputSubmitButton"] svg { fill: #16181f !important; }
+    color: {paper_color} !important;
+}}
+[data-testid="stChatInputSubmitButton"] {{
+    background-color: {gold_color} !important;
+}}
+[data-testid="stChatInputSubmitButton"] svg {{ fill: #16181f !important; }}
 
-/* Dropdown option lists (selectbox / multiselect popovers) */
-ul[data-baseweb="menu"], div[data-baseweb="popover"] {
-    background-color: var(--ink-surface) !important;
-    border: 1px solid var(--hairline) !important;
-}
-li[data-baseweb="menu-item"] {
-    color: var(--paper) !important;
+ul[data-baseweb="menu"], div[data-baseweb="popover"] {{
+    background-color: {surface_color} !important;
+    border: 1px solid {hairline_color} !important;
+}}
+li[data-baseweb="menu-item"] {{
+    color: {paper_color} !important;
     background-color: transparent !important;
-}
-li[data-baseweb="menu-item"]:hover {
-    background-color: var(--ink-bg-raised) !important;
-}
+}}
+li[data-baseweb="menu-item"]:hover {{
+    background-color: {bg_raised} !important;
+}}
 
-/* Multiselect selected-value tags — recolored into the
-   ledger palette instead of the library's default coral */
-span[data-baseweb="tag"] {
-    background-color: var(--ink-bg-raised) !important;
-    border: 1px solid var(--gold-dim) !important;
-    color: var(--paper) !important;
-}
-span[data-baseweb="tag"] span { color: var(--paper) !important; }
-span[data-baseweb="tag"] svg { fill: var(--paper) !important; }
+span[data-baseweb="tag"] {{
+    background-color: {bg_raised} !important;
+    border: 1px solid {gold_dim_color} !important;
+    color: {paper_color} !important;
+}}
+span[data-baseweb="tag"] span {{ color: {paper_color} !important; }}
+span[data-baseweb="tag"] svg {{ fill: {paper_color} !important; }}
 
-/* Sidebar reads as a ledger spine */
-section[data-testid="stSidebar"] {
-    background-color: var(--ink-bg-raised);
-    border-right: 1px solid var(--hairline);
-}
-section[data-testid="stSidebar"] h2 {
+section[data-testid="stSidebar"] {{
+    background-color: {bg_raised} !important;
+    border-right: 1px solid {hairline_color};
+}}
+section[data-testid="stSidebar"] h2 {{
     font-family: 'Source Serif 4', serif;
     font-size: 1.05rem;
     font-weight: 600;
-    color: var(--gold);
-    border-bottom: 1px solid var(--hairline);
+    color: {gold_color};
+    border-bottom: 1px solid {hairline_color};
     padding-bottom: 0.5rem;
-}
+}}
 
-/* Metric cards: flat ledger sheet with a left rule, not a floating glass tile */
-.metric-card {
-    background: var(--ink-surface);
-    border: 1px solid var(--hairline);
-    border-left: 3px solid var(--paper-dim);
+.metric-card {{
+    background: {surface_color};
+    border: 1px solid {hairline_color};
+    border-left: 3px solid {paper_dim_color};
     border-radius: 3px;
     padding: 18px 20px;
     margin-bottom: 10px;
-}
-.metric-card.accent-risk   { border-left-color: var(--risk-high); }
-.metric-card.accent-cost   { border-left-color: var(--gold); }
-.metric-card.accent-engage { border-left-color: var(--risk-low); }
+}}
+.metric-card.accent-risk   {{ border-left-color: {risk_high_color}; }}
+.metric-card.accent-cost   {{ border-left-color: {gold_color}; }}
+.metric-card.accent-engage {{ border-left-color: {risk_low_color}; }}
 
-.metric-title {
+.metric-title {{
     font-size: 0.8rem;
-    color: var(--paper-dim);
+    color: {paper_dim_color};
     font-weight: 500;
     font-family: 'IBM Plex Sans', sans-serif;
-}
-.metric-value {
+}}
+.metric-value {{
     font-family: 'Source Serif 4', serif;
     font-variant-numeric: tabular-nums;
     font-size: 2.1rem;
     font-weight: 600;
-    color: var(--paper);
+    color: {paper_color};
     margin-top: 4px;
-}
-.metric-badge-high { color: var(--risk-high); }
-.metric-badge-cost { color: var(--gold); }
+}}
+.metric-badge-high {{ color: {risk_high_color}; }}
+.metric-badge-cost {{ color: {gold_color}; }}
 
-/* Tabs styled as folder tabs in a ledger, underline not pills */
-.stTabs [data-baseweb="tab-list"] {
+.stTabs [data-baseweb="tab-list"] {{
     gap: 4px;
-    border-bottom: 1px solid var(--hairline);
-}
-.stTabs [data-baseweb="tab"] {
+    border-bottom: 1px solid {hairline_color};
+}}
+.stTabs [data-baseweb="tab"] {{
     background-color: transparent;
     font-family: 'IBM Plex Sans', sans-serif;
     font-weight: 500;
-    color: var(--paper-dim);
+    color: {paper_dim_color};
     padding: 10px 18px;
     border-bottom: 2px solid transparent;
-}
-.stTabs [aria-selected="true"] {
-    color: var(--paper);
-    border-bottom: 2px solid var(--gold);
+}}
+.stTabs [aria-selected="true"] {{
+    color: {paper_color};
+    border-bottom: 2px solid {gold_color};
     background-color: transparent;
-}
+}}
 
-/* Buttons: a ledger stamp, not a rounded SaaS pill */
-.stButton > button {
-    background-color: var(--gold);
+.stButton > button {{
+    background-color: {gold_color};
     color: #16181f;
     font-weight: 600;
     border: none;
     border-radius: 2px;
     padding: 0.5rem 1.2rem;
-}
-.stButton > button:hover {
-    background-color: var(--gold-dim);
-    color: var(--paper);
-}
+}}
+.stButton > button:hover {{
+    background-color: {gold_dim_color};
+    color: {paper_color};
+}}
 
-/* Inputs / sliders / selects */
-.stSlider [data-baseweb="slider"] > div > div { background: var(--gold); }
-div[data-basewef="select"] { color: var(--paper); }
-.stSelectbox > div > div, .stMultiSelect > div > div {
-    background-color: var(--ink-surface);
-    border: 1px solid var(--hairline);
-}
-
-hr, .stMarkdown hr { border-color: var(--hairline); }
-
-/* Chat */
-.stChatMessage {
-    background-color: var(--ink-surface);
-    border: 1px solid var(--hairline);
+.stChatMessage {{
+    background-color: {surface_color};
+    border: 1px solid {hairline_color};
     border-radius: 4px;
-}
+}}
 
-/* Metric widget (st.metric) used in the simulator */
-div[data-testid="stMetric"] {
-    background-color: var(--ink-surface);
-    border: 1px solid var(--hairline);
-    border-left: 3px solid var(--gold);
+div[data-testid="stMetric"] {{
+    background-color: {surface_color};
+    border: 1px solid {hairline_color};
+    border-left: 3px solid {gold_color};
     border-radius: 3px;
     padding: 12px 16px;
-}
-div[data-testid="stMetricLabel"] { color: var(--paper-dim); }
-div[data-testid="stMetricValue"] { font-family: 'Source Serif 4', serif; color: var(--paper); }
+}}
+div[data-testid="stMetricLabel"] {{ color: {paper_dim_color}; }}
+div[data-testid="stMetricValue"] {{ font-family: 'Source Serif 4', serif; color: {paper_color}; }}
 </style>
 """, unsafe_allow_html=True)
 
-# ============================================================
-# SHARED PLOTLY TEMPLATE — keeps every chart in the same
-# ledger palette instead of the stock "plotly_dark" theme
-# ============================================================
 LEDGER_TEMPLATE = go.layout.Template()
 LEDGER_TEMPLATE.layout = go.Layout(
-    paper_bgcolor="#12141b",
-    plot_bgcolor="#12141b",
-    font=dict(family="IBM Plex Sans, sans-serif", color="#eae5d8", size=13),
-    title_font=dict(family="Source Serif 4, serif", color="#eae5d8", size=18),
-    colorway=["#c8a133", "#6f8fb5", "#4d9285", "#c1564c", "#9299a6"],
-    xaxis=dict(gridcolor="rgba(201,178,140,0.12)", zerolinecolor="rgba(201,178,140,0.2)"),
-    yaxis=dict(gridcolor="rgba(201,178,140,0.12)", zerolinecolor="rgba(201,178,140,0.2)"),
+    paper_bgcolor=plotly_paper,
+    plot_bgcolor=plotly_bg,
+    font=dict(family="IBM Plex Sans, sans-serif", color=paper_color, size=13),
+    title_font=dict(family="Source Serif 4, serif", color=paper_color, size=18),
+    colorway=[gold_color, "#6f8fb5", risk_low_color, risk_high_color, paper_dim_color],
+    xaxis=dict(gridcolor=plotly_grid, zerolinecolor=hairline_color),
+    yaxis=dict(gridcolor=plotly_grid, zerolinecolor=hairline_color),
     legend=dict(bgcolor="rgba(0,0,0,0)"),
 )
 
-RISK_COLOR_MAP = {'HIGH': '#c1564c', 'MEDIUM': '#c99a3c', 'LOW': '#4d9285'}
+RISK_COLOR_MAP = {'HIGH': risk_high_color, 'MEDIUM': risk_med_color, 'LOW': risk_low_color}
 
 # Data Loader & Model Pipeline Loader
 from app.ml.loader import ModelLoader
