@@ -1,7 +1,7 @@
 import sys
 import os
 
-# Prepend project root directory to sys.path to ensure 'app' package is resolved correctly
+# Prepend project root directory to sys.path so 'app' submodules resolve cleanly
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
@@ -53,8 +53,11 @@ st.markdown("""
     --cost-blue: #6f8fb5;
 }
 
-html, body, .stApp {
-    background-color: var(--ink-bg);
+html, body, .stApp,
+[data-testid="stAppViewContainer"],
+[data-testid="stMain"],
+.main {
+    background-color: var(--ink-bg) !important;
     color: var(--paper);
     font-family: 'IBM Plex Sans', sans-serif;
 }
@@ -66,10 +69,15 @@ h1, h2, h3, .ledger-heading {
     letter-spacing: 0.01em;
 }
 
-h1 {
-    font-weight: 600;
+/* Main page title — deliberately oversized, the one signature moment */
+[data-testid="stAppViewContainer"] h1,
+[data-testid="stMain"] h1 {
+    font-weight: 700;
+    font-size: 3.4rem;
+    line-height: 1.15;
     border-bottom: 1px solid var(--hairline);
-    padding-bottom: 0.6rem;
+    padding-bottom: 0.7rem;
+    margin-bottom: 0.4rem;
 }
 
 h3 {
@@ -81,7 +89,88 @@ p, span, div, label {
     color: var(--paper);
 }
 
-.stApp > header { background-color: transparent; }
+/* -------------------------------------------------------
+   Top toolbar (the native Streamlit header strip holding
+   the "Deploy" button and the ⋮ menu) — was left on the
+   library's default light background; bring it into the
+   ledger palette so its controls are actually legible.
+-------------------------------------------------------- */
+header[data-testid="stHeader"] {
+    background-color: var(--ink-bg) !important;
+    border-bottom: 1px solid var(--hairline);
+}
+header[data-testid="stHeader"] * {
+    color: var(--paper) !important;
+    fill: var(--paper) !important;
+}
+[data-testid="stToolbar"] button,
+.stDeployButton button {
+    color: var(--paper) !important;
+    background-color: transparent !important;
+}
+[data-testid="stToolbar"] button:hover {
+    background-color: var(--ink-surface) !important;
+}
+[data-testid="stDecoration"] { background-image: none !important; background-color: var(--gold) !important; }
+
+/* -------------------------------------------------------
+   Every text/number input, textarea and dropdown in the
+   app — including the chat box — was rendering on the
+   framework's default light surface, which made typed
+   text (light-on-light) unreadable. Force the ledger
+   surface + paper text everywhere a person can type.
+-------------------------------------------------------- */
+input, textarea,
+div[data-baseweb="input"],
+div[data-baseweb="textarea"],
+div[data-baseweb="base-input"],
+div[data-baseweb="select"] > div {
+    background-color: var(--ink-surface) !important;
+    color: var(--paper) !important;
+    border-color: var(--hairline) !important;
+    caret-color: var(--paper) !important;
+}
+input::placeholder, textarea::placeholder {
+    color: var(--paper-dim) !important;
+    opacity: 1;
+}
+
+/* Chat input specifically */
+[data-testid="stChatInput"] {
+    background-color: var(--ink-surface) !important;
+    border: 1px solid var(--hairline) !important;
+}
+[data-testid="stChatInput"] textarea {
+    background-color: transparent !important;
+    color: var(--paper) !important;
+}
+[data-testid="stChatInputSubmitButton"] {
+    background-color: var(--gold) !important;
+}
+[data-testid="stChatInputSubmitButton"] svg { fill: #16181f !important; }
+
+/* Dropdown option lists (selectbox / multiselect popovers) */
+ul[data-baseweb="menu"], div[data-baseweb="popover"] {
+    background-color: var(--ink-surface) !important;
+    border: 1px solid var(--hairline) !important;
+}
+li[data-baseweb="menu-item"] {
+    color: var(--paper) !important;
+    background-color: transparent !important;
+}
+li[data-baseweb="menu-item"]:hover {
+    background-color: var(--ink-bg-raised) !important;
+}
+
+/* Multiselect selected-value tags — recolored into the
+   ledger palette instead of the library's default coral */
+span[data-baseweb="tag"] {
+    background-color: var(--ink-bg-raised) !important;
+    border: 1px solid var(--gold-dim) !important;
+    color: var(--paper) !important;
+}
+span[data-baseweb="tag"] span { color: var(--paper) !important; }
+span[data-baseweb="tag"] svg { fill: var(--paper) !important; }
 
 /* Sidebar reads as a ledger spine */
 section[data-testid="stSidebar"] {
