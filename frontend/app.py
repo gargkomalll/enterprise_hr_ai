@@ -79,13 +79,15 @@ st.sidebar.header("🔍 Global Dashboard Filters")
 selected_dept = st.sidebar.multiselect(
     "Select Department(s)",
     options=sorted(df_master['Department'].unique().tolist()),
-    default=sorted(df_master['Department'].unique().tolist())
+    default=sorted(df_master['Department'].unique().tolist()),
+    key="global_dept_filter"
 )
 
 selected_risk = st.sidebar.multiselect(
     "Filter by Attrition Risk Tier",
     options=['HIGH', 'MEDIUM', 'LOW'],
-    default=['HIGH', 'MEDIUM', 'LOW']
+    default=['HIGH', 'MEDIUM', 'LOW'],
+    key="global_risk_filter"
 )
 
 # Apply Filters
@@ -225,7 +227,7 @@ with tab3:
     st.markdown("Simulate how policy interventions (compensation hikes, overtime elimination, work-life balance improvements) alter predicted employee flight risk.")
     
     emp_ids = sorted(df_master['EmployeeNumber'].tolist())
-    target_emp_id = st.selectbox("Select Employee ID for Simulation", options=emp_ids, index=0)
+    target_emp_id = st.selectbox("Select Employee ID for Simulation", options=emp_ids, index=0, key="whatif_emp_select")
     
     emp_row = df_master[df_master['EmployeeNumber'] == target_emp_id].iloc[0]
     
@@ -241,9 +243,9 @@ with tab3:
         
     with col_sim2:
         st.markdown("#### Hypothetical Policy Interventions")
-        sim_salary_hike = st.slider("Salary Increase (%)", min_value=0, max_value=50, value=15, step=5)
-        sim_overtime = st.selectbox("Eliminate OverTime?", options=["No (Keep Current OverTime)", "Yes (Remove OverTime)"])
-        sim_wlb = st.slider("Target Work-Life Balance Rating", min_value=1, max_value=4, value=4)
+        sim_salary_hike = st.slider("Salary Increase (%)", min_value=0, max_value=50, value=15, step=5, key="sim_salary_hike_slider")
+        sim_overtime = st.selectbox("Eliminate OverTime?", options=["No (Keep Current OverTime)", "Yes (Remove OverTime)"], key="sim_overtime_select")
+        sim_wlb = st.slider("Target Work-Life Balance Rating", min_value=1, max_value=4, value=4, key="sim_wlb_slider")
         
         # Calculate simulation
         new_income = emp_row['MonthlyIncome'] * (1 + sim_salary_hike / 100.0)
@@ -255,7 +257,7 @@ with tab3:
             "WorkLifeBalance": sim_wlb
         }
         
-        if st.button("🚀 Execute What-If Simulation"):
+        if st.button("🚀 Execute What-If Simulation", key="btn_run_whatif"):
             try:
                 from app.services.whatif_service import run_whatif_simulation
                 res = run_whatif_simulation(int(target_emp_id), overrides)
@@ -300,7 +302,7 @@ with tab3:
 with tab4:
     st.subheader("💰 Financial Attrition Cost Exposure Model")
     
-    mult_override = st.slider("Turnover Cost Multiplier (x Annual Salary)", min_value=0.5, max_value=3.0, value=1.5, step=0.1)
+    mult_override = st.slider("Turnover Cost Multiplier (x Annual Salary)", min_value=0.5, max_value=3.0, value=1.5, step=0.1, key="cost_mult_slider")
     
     calc_df = filtered_df.copy()
     calc_df['Annual_Sal'] = calc_df['MonthlyIncome'] * 12
@@ -335,7 +337,7 @@ with tab4:
 with tab5:
     st.subheader("👤 Single-Employee Intelligence Profile")
     
-    drill_emp_id = st.selectbox("Select Employee for Drill-Down", options=emp_ids, index=0)
+    drill_emp_id = st.selectbox("Select Employee for Drill-Down", options=emp_ids, index=0, key="drill_emp_select")
     drill_row = df_master[df_master['EmployeeNumber'] == drill_emp_id].iloc[0]
     
     d1, d2 = st.columns(2)
