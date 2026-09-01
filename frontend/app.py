@@ -24,68 +24,64 @@ st.set_page_config(
 )
 
 # ============================================================
-# THEME CONFIGURATION & SIDEBAR MODE SELECTOR
+# THEME CONFIGURATION (single fixed dark theme — no toggle)
 # ============================================================
-st.sidebar.header("Appearance & Register Filters")
-theme_mode = st.sidebar.radio(
-    "Theme mode",
-    ["Dark Mode 🌙", "Light Mode ☀️"],
-    index=0,
-    key="theme_mode_radio"
-)
 
-is_dark = (theme_mode == "Dark Mode 🌙")
+# Palette inspired by the reference image, fixed to dark mode only:
+# powder blue → warm cream → soft peach → dusty pink → sage, all on a
+# deep olive/charcoal base.
+bg_color = "#111614"
+bg_raised = "#171D1A"
+surface_color = "#1E2622"
+surface_alt = "#242D28"
+hairline_color = "rgba(211, 224, 216, 0.14)"
 
-if is_dark:
-    bg_color = "#12141b"
-    bg_raised = "#181b24"
-    surface_color = "#1d2029"
-    hairline_color = "rgba(201, 178, 140, 0.16)"
-    paper_color = "#eae5d8"
-    paper_dim_color = "#9299a6"
-    gold_color = "#c8a133"
-    gold_dim_color = "#8a7126"
-    risk_high_color = "#c1564c"
-    risk_med_color = "#c99a3c"
-    risk_low_color = "#4d9285"
-    plotly_bg = "#12141b"
-    plotly_paper = "#12141b"
-    plotly_grid = "rgba(201,178,140,0.12)"
-    gauge_step_high = "#4a2c28"
-    gauge_step_med = "#4a3d20"
-    gauge_step_low = "#2d4a44"
-else:
-    bg_color = "#f6f4ed"
-    bg_raised = "#ffffff"
-    surface_color = "#ffffff"
-    hairline_color = "rgba(100, 80, 40, 0.22)"
-    paper_color = "#1a1d24"
-    paper_dim_color = "#5a6270"
-    gold_color = "#b38600"
-    gold_dim_color = "#8a6400"
-    risk_high_color = "#b9382b"
-    risk_med_color = "#b8801f"
-    risk_low_color = "#2b7a6d"
-    plotly_bg = "#ffffff"
-    plotly_paper = "#f6f4ed"
-    plotly_grid = "rgba(0,0,0,0.08)"
-    gauge_step_high = "#fcd5d1"
-    gauge_step_med = "#fef0d2"
-    gauge_step_low = "#d3e8e4"
+paper_color = "#E8EEE9"
+paper_dim_color = "#AAB7AF"
+
+blue_color = "#79B7C5"
+cream_color = "#D9D1BE"
+peach_color = "#C99784"
+pink_color = "#D88F91"
+sage_color = "#9EB29F"
+charcoal_color = "#738177"
+
+primary_color = blue_color
+gold_color = cream_color
+
+risk_high_color = pink_color
+risk_med_color = peach_color
+risk_low_color = sage_color
+
+plotly_bg = bg_color
+plotly_paper = bg_color
+plotly_grid = "rgba(211,224,216,0.10)"
+
+gauge_step_high = "#4A3032"
+gauge_step_med = "#49392F"
+gauge_step_low = "#2E4037"
 
 st.markdown(f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
 
 :root {{
-    --ink-bg: {bg_color};
-    --ink-bg-raised: {bg_raised};
-    --ink-surface: {surface_color};
-    --hairline: {hairline_color};
-    --paper: {paper_color};
-    --paper-dim: {paper_dim_color};
-    --gold: {gold_color};
-    --gold-dim: {gold_dim_color};
+    --app-bg: {bg_color};
+    --app-raised: {bg_raised};
+    --surface: {surface_color};
+    --surface-alt: {surface_alt};
+    --line: {hairline_color};
+
+    --text: {paper_color};
+    --text-dim: {paper_dim_color};
+
+    --blue: {blue_color};
+    --cream: {cream_color};
+    --peach: {peach_color};
+    --pink: {pink_color};
+    --sage: {sage_color};
+    --charcoal: {charcoal_color};
+
     --risk-high: {risk_high_color};
     --risk-medium: {risk_med_color};
     --risk-low: {risk_low_color};
@@ -95,190 +91,365 @@ html, body, .stApp,
 [data-testid="stAppViewContainer"],
 [data-testid="stMain"],
 .main {{
-    background-color: {bg_color} !important;
-    color: {paper_color} !important;
-    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--app-bg) !important;
+    color: var(--text) !important;
+    font-family: 'DM Sans', sans-serif;
+}}
+
+[data-testid="stMainBlockContainer"] {{
+    padding-top: 2.2rem;
+    padding-bottom: 3rem;
 }}
 
 h1, h2, h3, .ledger-heading {{
-    font-family: 'Source Serif 4', serif;
-    color: {paper_color} !important;
-    letter-spacing: 0.01em;
+    font-family: 'Playfair Display', serif;
+    color: var(--text) !important;
+    letter-spacing: -0.015em;
 }}
 
 [data-testid="stAppViewContainer"] h1,
 [data-testid="stMain"] h1 {{
     font-weight: 700;
-    font-size: 3.4rem;
-    line-height: 1.15;
-    border-bottom: 1px solid {hairline_color};
-    padding-bottom: 0.7rem;
-    margin-bottom: 0.4rem;
+    font-size: 3.05rem;
+    line-height: 1.12;
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0.25rem;
+}}
+
+[data-testid="stMain"] h1::after {{
+    content: "";
+    display: block;
+    width: 76px;
+    height: 5px;
+    margin-top: 13px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        var(--blue) 0 25%,
+        var(--peach) 25% 50%,
+        var(--pink) 50% 75%,
+        var(--sage) 75% 100%
+    );
 }}
 
 h3 {{
     font-weight: 600;
-    font-size: 1.15rem;
+    font-size: 1.18rem;
 }}
 
 p, span, div, label {{
-    color: {paper_color} !important;
+    color: var(--text) !important;
+}}
+
+[data-testid="stMarkdownContainer"] p {{
+    color: var(--text-dim) !important;
 }}
 
 header[data-testid="stHeader"] {{
-    background-color: {bg_color} !important;
-    border-bottom: 1px solid {hairline_color};
+    background: var(--app-bg) !important;
+    border-bottom: 1px solid var(--line);
 }}
+
 header[data-testid="stHeader"] * {{
-    color: {paper_color} !important;
-    fill: {paper_color} !important;
+    color: var(--text) !important;
+    fill: var(--text) !important;
 }}
+
 [data-testid="stToolbar"] button,
 .stDeployButton button {{
-    color: {paper_color} !important;
-    background-color: transparent !important;
+    color: var(--text) !important;
+    background: transparent !important;
 }}
+
 [data-testid="stToolbar"] button:hover {{
-    background-color: {surface_color} !important;
+    background: var(--surface) !important;
 }}
-[data-testid="stDecoration"] {{ background-image: none !important; background-color: {gold_color} !important; }}
+
+[data-testid="stDecoration"] {{
+    background-image: none !important;
+    background-color: var(--blue) !important;
+}}
 
 input, textarea,
 div[data-baseweb="input"],
 div[data-baseweb="textarea"],
 div[data-baseweb="base-input"],
 div[data-baseweb="select"] > div {{
-    background-color: {surface_color} !important;
-    color: {paper_color} !important;
-    border-color: {hairline_color} !important;
-    caret-color: {paper_color} !important;
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 12px !important;
+    caret-color: var(--text) !important;
 }}
+
+input:focus, textarea:focus {{
+    border-color: var(--blue) !important;
+    box-shadow: 0 0 0 2px rgba(153,203,216,0.18) !important;
+}}
+
 input::placeholder, textarea::placeholder {{
-    color: {paper_dim_color} !important;
+    color: var(--text-dim) !important;
     opacity: 1;
 }}
 
 [data-testid="stChatInput"] {{
-    background-color: {surface_color} !important;
-    border: 1px solid {hairline_color} !important;
+    background: var(--surface) !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 16px !important;
 }}
+
 [data-testid="stChatInput"] textarea {{
-    background-color: transparent !important;
-    color: {paper_color} !important;
+    background: transparent !important;
+    color: var(--text) !important;
 }}
+
 [data-testid="stChatInputSubmitButton"] {{
-    background-color: {gold_color} !important;
+    background: var(--blue) !important;
+    border-radius: 12px !important;
 }}
-[data-testid="stChatInputSubmitButton"] svg {{ fill: #16181f !important; }}
 
-ul[data-baseweb="menu"], div[data-baseweb="popover"] {{
-    background-color: {surface_color} !important;
-    border: 1px solid {hairline_color} !important;
+[data-testid="stChatInputSubmitButton"] svg {{
+    fill: #24302C !important;
 }}
-li[data-baseweb="menu-item"] {{
-    color: {paper_color} !important;
+
+/* ---- Dropdown / multiselect popovers (select, multiselect) ----
+   These render in a portal at the end of <body>, so we target every
+   BaseWeb attribute regardless of the wrapping element (ul/div/li)
+   and force a max-height + scroll so long option lists never get
+   clipped the way they were before. */
+[data-baseweb="popover"] {{
+    z-index: 9999 !important;
+}}
+
+[data-baseweb="popover"] [data-baseweb="menu"],
+[data-baseweb="popover"] ul[role="listbox"],
+[data-baseweb="popover"] div[role="listbox"] {{
+    background: var(--surface) !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.18) !important;
+    max-height: 280px !important;
+    overflow-y: auto !important;
+    padding: 4px !important;
+}}
+
+[data-baseweb="popover"] li,
+[data-baseweb="popover"] [role="option"],
+[data-baseweb="menu-item"] {{
+    background: transparent !important;
+    color: var(--text) !important;
+    border-radius: 8px !important;
+    padding: 8px 10px !important;
+}}
+
+[data-baseweb="popover"] li:hover,
+[data-baseweb="popover"] [role="option"]:hover,
+[data-baseweb="menu-item"]:hover,
+[data-baseweb="popover"] [aria-selected="true"] {{
+    background: var(--surface-alt) !important;
+    color: var(--text) !important;
+}}
+
+/* Scrollbar so a long options list is obviously scrollable, not cut off */
+[data-baseweb="popover"] *::-webkit-scrollbar {{
+    width: 8px;
+}}
+[data-baseweb="popover"] *::-webkit-scrollbar-thumb {{
+    background: var(--line) !important;
+    border-radius: 8px;
+}}
+[data-baseweb="popover"] *::-webkit-scrollbar-track {{
+    background: transparent;
+}}
+
+/* ---- Multiselect chips (Department / Risk tier pills) ----
+   Recolored from bright red into an elegant soft pastel sage/slate pill */
+div[data-testid="stMultiSelect"] span[data-baseweb="tag"],
+div[data-testid="stMultiSelect"] div[data-baseweb="tag"],
+section[data-testid="stSidebar"] [data-baseweb="tag"],
+[data-baseweb="tag"],
+span[data-baseweb="tag"],
+div[data-baseweb="tag"],
+.stMultiSelect [data-baseweb="tag"],
+[data-baseweb="tag"][style] {{
+    background-color: #273630 !important;
+    background: #273630 !important;
+    border: 1px solid rgba(158, 178, 159, 0.4) !important;
+    color: #E8EEE9 !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+}}
+
+[data-baseweb="tag"] *,
+span[data-baseweb="tag"] *,
+div[data-baseweb="tag"] * {{
     background-color: transparent !important;
-}}
-li[data-baseweb="menu-item"]:hover {{
-    background-color: {bg_raised} !important;
+    background: transparent !important;
+    color: #E8EEE9 !important;
+    fill: #E8EEE9 !important;
 }}
 
-span[data-baseweb="tag"] {{
-    background-color: {bg_raised} !important;
-    border: 1px solid {gold_dim_color} !important;
-    color: {paper_color} !important;
+[data-baseweb="tag"] svg,
+span[data-baseweb="tag"] svg {{
+    fill: #AAB7AF !important;
 }}
-span[data-baseweb="tag"] span {{ color: {paper_color} !important; }}
-span[data-baseweb="tag"] svg {{ fill: {paper_color} !important; }}
+
+[data-baseweb="tag"]:hover {{
+    background-color: #30423B !important;
+    border-color: var(--blue) !important;
+}}
 
 section[data-testid="stSidebar"] {{
-    background-color: {bg_raised} !important;
-    border-right: 1px solid {hairline_color};
+    background:
+        linear-gradient(
+            180deg,
+            var(--surface) 0%,
+            var(--surface-alt) 100%
+        ) !important;
+    border-right: 1px solid var(--line);
 }}
+
 section[data-testid="stSidebar"] h2 {{
-    font-family: 'Source Serif 4', serif;
-    font-size: 1.05rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.12rem;
     font-weight: 600;
-    color: {gold_color};
-    border-bottom: 1px solid {hairline_color};
+    color: var(--text) !important;
+    border-bottom: 0;
     padding-bottom: 0.5rem;
 }}
 
-.metric-card {{
-    background: {surface_color};
-    border: 1px solid {hairline_color};
-    border-left: 3px solid {paper_dim_color};
-    border-radius: 3px;
-    padding: 18px 20px;
-    margin-bottom: 10px;
+section[data-testid="stSidebar"] [data-testid="stRadio"] label {{
+    border-radius: 10px;
 }}
-.metric-card.accent-risk   {{ border-left-color: {risk_high_color}; }}
-.metric-card.accent-cost   {{ border-left-color: {gold_color}; }}
-.metric-card.accent-engage {{ border-left-color: {risk_low_color}; }}
+
+.metric-card {{
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 21px 22px;
+    margin-bottom: 10px;
+    box-shadow: 0 8px 24px rgba(40,48,44,0.06);
+}}
+
+.metric-card::before {{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--blue);
+}}
+
+.metric-card.accent-risk::before {{ background: var(--pink); }}
+.metric-card.accent-cost::before {{ background: var(--peach); }}
+.metric-card.accent-engage::before {{ background: var(--sage); }}
 
 .metric-title {{
-    font-size: 0.8rem;
-    color: {paper_dim_color};
-    font-weight: 500;
-    font-family: 'IBM Plex Sans', sans-serif;
-}}
-.metric-value {{
-    font-family: 'Source Serif 4', serif;
-    font-variant-numeric: tabular-nums;
-    font-size: 2.1rem;
+    font-size: 0.78rem;
+    color: var(--text-dim) !important;
     font-weight: 600;
-    color: {paper_color};
-    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-top: 3px;
 }}
-.metric-badge-high {{ color: {risk_high_color}; }}
-.metric-badge-cost {{ color: {gold_color}; }}
+
+.metric-value {{
+    font-family: 'Playfair Display', serif;
+    font-variant-numeric: tabular-nums;
+    font-size: 2.15rem;
+    font-weight: 600;
+    color: var(--text) !important;
+    margin-top: 5px;
+}}
+
+.metric-badge-high {{ color: var(--risk-high) !important; }}
+.metric-badge-cost {{ color: var(--peach) !important; }}
 
 .stTabs [data-baseweb="tab-list"] {{
-    gap: 4px;
-    border-bottom: 1px solid {hairline_color};
+    gap: 6px;
+    border-bottom: 1px solid var(--line);
+    background: transparent;
 }}
+
 .stTabs [data-baseweb="tab"] {{
-    background-color: transparent;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-weight: 500;
-    color: {paper_dim_color};
-    padding: 10px 18px;
-    border-bottom: 2px solid transparent;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    color: var(--text-dim) !important;
+    padding: 11px 16px;
+    border-bottom: 3px solid transparent;
 }}
+
 .stTabs [aria-selected="true"] {{
-    color: {paper_color};
-    border-bottom: 2px solid {gold_color};
-    background-color: transparent;
+    color: var(--text) !important;
+    border-bottom: 3px solid var(--blue);
+    background: transparent;
 }}
 
 .stButton > button {{
-    background-color: {gold_color};
-    color: #16181f;
-    font-weight: 600;
-    border: none;
-    border-radius: 2px;
-    padding: 0.5rem 1.2rem;
+    background: #0C0F0D !important;
+    color: #F4F1E8 !important;
+    font-weight: 700;
+    border: 1px solid var(--line) !important;
+    border-radius: 12px !important;
+    padding: 0.62rem 1.25rem;
+    transition: all 0.2s ease;
 }}
+
 .stButton > button:hover {{
-    background-color: {gold_dim_color};
-    color: {paper_color};
+    background: #1B211D !important;
+    color: #F4F1E8 !important;
+    border-color: var(--blue) !important;
+    transform: translateY(-1px);
 }}
 
 .stChatMessage {{
-    background-color: {surface_color};
-    border: 1px solid {hairline_color};
-    border-radius: 4px;
+    background: var(--surface) !important;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(40,48,44,0.04);
 }}
 
 div[data-testid="stMetric"] {{
-    background-color: {surface_color};
-    border: 1px solid {hairline_color};
-    border-left: 3px solid {gold_color};
-    border-radius: 3px;
-    padding: 12px 16px;
+    background: var(--surface) !important;
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--blue);
+    border-left: 0;
+    border-radius: 15px;
+    padding: 13px 16px;
 }}
-div[data-testid="stMetricLabel"] {{ color: {paper_dim_color}; }}
-div[data-testid="stMetricValue"] {{ font-family: 'Source Serif 4', serif; color: {paper_color}; }}
+
+div[data-testid="stMetricLabel"] {{
+    color: var(--text-dim) !important;
+}}
+
+div[data-testid="stMetricValue"] {{
+    font-family: 'Playfair Display', serif;
+    color: var(--text) !important;
+}}
+
+[data-testid="stExpander"] {{
+    background: var(--surface) !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 14px !important;
+}}
+
+hr {{
+    border-color: var(--line) !important;
+}}
+
+.stSlider [data-baseweb="slider"] div {{
+    background-color: var(--blue);
+}}
+
+.stSelectbox label, .stMultiSelect label, .stRadio label {{
+    font-weight: 600 !important;
+}}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -288,7 +459,7 @@ LEDGER_TEMPLATE.layout = go.Layout(
     plot_bgcolor=plotly_bg,
     font=dict(family="IBM Plex Sans, sans-serif", color=paper_color, size=13),
     title_font=dict(family="Source Serif 4, serif", color=paper_color, size=18),
-    colorway=[gold_color, "#6f8fb5", risk_low_color, risk_high_color, paper_dim_color],
+    colorway=[blue_color, peach_color, pink_color, sage_color, charcoal_color, cream_color],
     xaxis=dict(gridcolor=plotly_grid, zerolinecolor=hairline_color),
     yaxis=dict(gridcolor=plotly_grid, zerolinecolor=hairline_color),
     legend=dict(bgcolor="rgba(0,0,0,0)"),
@@ -532,12 +703,12 @@ with tab3:
                     delta={'reference': base_p * 100},
                     gauge={
                         'axis': {'range': [0, 100]},
-                        'bar': {'color': "#c8a133"},
-                        'bgcolor': "#1d2029",
+                        'bar': {'color': primary_color},
+                        'bgcolor': surface_alt,
                         'steps': [
-                            {'range': [0, 30], 'color': "#2d4a44"},
-                            {'range': [30, 50], 'color': "#4a3d20"},
-                            {'range': [50, 100], 'color': "#4a2c28"}
+                            {'range': [0, 30], 'color': gauge_step_low},
+                            {'range': [30, 50], 'color': gauge_step_med},
+                            {'range': [50, 100], 'color': gauge_step_high}
                         ]
                     }
                 ))
@@ -578,7 +749,7 @@ with tab4:
         color='Financial_Exposure',
         title="Cost exposure by department ($)",
         template=LEDGER_TEMPLATE,
-        color_continuous_scale=[[0, "#3a3120"], [0.5, "#8a7126"], [1, "#c8a133"]]
+        color_continuous_scale=[[0, sage_color], [0.5, peach_color], [1, blue_color]]
     )
     st.plotly_chart(fig_cost_dept, use_container_width=True)
 
