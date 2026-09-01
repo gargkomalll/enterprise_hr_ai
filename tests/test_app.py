@@ -102,3 +102,10 @@ def test_chatbot_endpoint():
     assert "reply" in data
     assert "action_suggestions" in data
     assert len(data["action_suggestions"]) > 0
+
+def test_rag_evaluation_metrics():
+    from app.monitoring.rag_eval import evaluate_retrieval_system
+    results = evaluate_retrieval_system(k=3)
+    assert results["Evaluated_Metric_K"] == 3
+    assert results["Mean_Recall_at_K"] >= 0.80
+    assert results["Mean_Reciprocal_Rank_MRR"] >= 0.80
