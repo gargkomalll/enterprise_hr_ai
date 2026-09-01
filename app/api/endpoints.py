@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from app.validation.employee_schema import EmployeePredictRequest, WhatIfSimulationRequest
+from app.validation.employee_schema import EmployeePredictRequest, WhatIfSimulationRequest, ChatRequest, ChatResponse
 from app.services.prediction_service import predict_single_employee_attrition
 from app.services.analytics_service import (
     get_dashboard_summary,
@@ -10,6 +10,7 @@ from app.services.analytics_service import (
     get_cost_exposure_summary
 )
 from app.services.whatif_service import run_whatif_simulation
+from app.services.chatbot_service import process_chat_message
 
 router = APIRouter()
 
@@ -54,3 +55,12 @@ def simulate_whatif(payload: WhatIfSimulationRequest):
 @router.get("/dashboard/cost-exposure")
 def cost_exposure():
     return get_cost_exposure_summary()
+
+@router.post("/chat", response_model=ChatResponse)
+def hr_chatbot(payload: ChatRequest):
+    try:
+        res = process_chat_message(payload.message, payload.employee_id)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+

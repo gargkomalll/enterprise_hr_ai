@@ -93,3 +93,12 @@ def test_cost_exposure_endpoint():
     data = response.json()
     assert "Total_Organization_Cost_Exposure" in data
     assert data["Total_Organization_Cost_Exposure"] > 0
+
+def test_chatbot_endpoint():
+    payload = {"message": "Who are the highest flight risk employees?"}
+    response = client.post("/chat", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert "reply" in data
+    assert "action_suggestions" in data
+    assert len(data["action_suggestions"]) > 0

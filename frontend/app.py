@@ -97,12 +97,13 @@ filtered_df = df_master[
 ]
 
 # Tabs
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "📊 Executive Dashboard",
     "🎯 Skill Gap & Upskilling",
     "🧪 What-If Policy Simulator",
     "💰 Financial Cost Exposure",
-    "👤 Employee Drill-Down"
+    "👤 Employee Drill-Down",
+    "💬 HR AI Co-Pilot"
 ])
 
 # ---------------------------------------------------------
@@ -356,3 +357,41 @@ with tab5:
         st.markdown(f"**Predicted Flight Risk**: `{drill_row['Attrition_Probability']*100:.1f}%` (**{drill_row['Attrition_Risk_Tier']}**)")
         st.markdown(f"**Missing Skills Count**: `{drill_row['Missing_Skills_Count']}` skills")
         st.markdown(f"**Top Recommended Course Path**: `{drill_row['Recommended_Course_Title']}`")
+
+# ---------------------------------------------------------
+# TAB 6: HR AI CO-PILOT CHATBOT
+# ---------------------------------------------------------
+with tab6:
+    st.subheader("💬 HR AI Co-Pilot & Natural Language Intelligence")
+    st.markdown("Ask any question about employee attrition risks, department cost exposures, skill gaps, or policy simulations.")
+    
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {"role": "assistant", "content": "👋 Hi! I'm your **Enterprise HR AI Co-Pilot**. Ask me anything like: *'Who are the top high flight risk employees?'* or *'What is our financial cost exposure?'*"}
+        ]
+        
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+            
+    user_prompt = st.chat_input("Ask HR AI Co-Pilot a question...", key="chat_input_box")
+    if user_prompt:
+        st.session_state.messages.append({"role": "user", "content": user_prompt})
+        with st.chat_message("user"):
+            st.markdown(user_prompt)
+            
+        with st.chat_message("assistant"):
+            try:
+                from app.services.chatbot_service import process_chat_message
+                res = process_chat_message(user_prompt)
+                reply = res["reply"]
+                st.markdown(reply)
+                st.session_state.messages.append({"role": "assistant", "content": reply})
+                
+                if res.get("action_suggestions"):
+                    st.write("**Suggested Next Actions:**")
+                    for sug in res["action_suggestions"]:
+                        st.caption(f"💡 {sug}")
+            except Exception as e:
+                st.error(f"Chatbot Error: {str(e)}")
+

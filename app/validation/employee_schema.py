@@ -37,3 +37,12 @@ class EmployeePredictRequest(BaseModel):
 class WhatIfSimulationRequest(BaseModel):
     EmployeeNumber: int = Field(..., description="Target employee ID")
     Overrides: Dict[str, Any] = Field(..., description="Feature override dict (e.g. {'MonthlyIncome': 6000, 'OverTime': 'No'})")
+
+class ChatRequest(BaseModel):
+    message: str = Field(..., description="Natural language HR query string")
+    employee_id: Optional[int] = Field(None, description="Optional employee ID context")
+
+class ChatResponse(BaseModel):
+    reply: str
+    data_summary: Dict[str, Any]
+    action_suggestions: list[str]
