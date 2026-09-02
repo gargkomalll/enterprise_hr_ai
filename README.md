@@ -120,6 +120,6 @@ python -m pytest tests/ -v
 
 ---
 
-## Retraining & Monitoring Strategy
+## Model Monitoring & Drift Tracking
 - **Drift Checks**: Executed via `python -m app.monitoring.drift` comparing production predictions against baseline.
-- **Triggers**: Automated retraining triggers if high-risk ratio shifts $> 10\%$ or 6 months of new outcome data arrives.
+- **Triggers**: Automated drift warnings if high-risk ratio shifts $> 10\%$ or feature distribution $p < 0.05$.
