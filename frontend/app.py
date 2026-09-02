@@ -803,8 +803,20 @@ with tab6:
 
         with st.chat_message("assistant"):
             try:
-                from app.services.chatbot_service import process_chat_message
-                res = process_chat_message(user_prompt)
+                backend_url = os.getenv("BACKEND_URL", "").rstrip("/")
+                res = None
+                if backend_url:
+                    try:
+                        api_resp = requests.post(f"{backend_url}/chat", json={"message": user_prompt}, timeout=10)
+                        if api_resp.status_code == 200:
+                            res = api_resp.json()
+                    except Exception:
+                        pass
+                
+                if not res:
+                    from app.services.chatbot_service import process_chat_message
+                    res = process_chat_message(user_prompt)
+
                 reply = res["reply"]
                 st.markdown(reply)
                 st.session_state.messages.append({"role": "assistant", "content": reply})

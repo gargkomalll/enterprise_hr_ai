@@ -124,17 +124,33 @@ python -m app.monitoring.rag_eval
 
 ---
 
-## ☁️ Streamlit Community Cloud Deployment Guide
+## 🌐 Production Cloud Deployment Guide
 
-To deploy this app live on **Streamlit Community Cloud** (free cloud hosting):
+### 1. ⚙️ Deploy FastAPI Backend on Render (Render.com)
 
-1. **Sign in to Streamlit Cloud**: Go to [share.streamlit.io](https://share.streamlit.io/) and log in with your GitHub account.
-2. **Create New App**: Click **"Create app"** $\rightarrow$ select **"Use existing repo"**.
-3. **Repository Settings**:
-   - **Repository**: `gargkomalll/enterprise-hr-ai` (or `gargkomalll/enterprise_hr_ai`)
+1. Log in to [dashboard.render.com](https://dashboard.render.com/) with GitHub.
+2. Click **New +** $\rightarrow$ select **Web Service**.
+3. Connect repository **`gargkomalll/enterprise-hr-ai`**.
+4. Configure Web Service:
+   - **Name**: `enterprise-hr-ai-backend`
+   - **Environment**: `Python`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Click **Create Web Service**. Render will build and deploy your API at `https://enterprise-hr-ai-backend.onrender.com`.
+
+---
+
+### 2. 🎈 Deploy Streamlit Dashboard on Streamlit Community Cloud
+
+1. Log in to [share.streamlit.io](https://share.streamlit.io/) with GitHub.
+2. Click **Create app** $\rightarrow$ select **Use existing repo**.
+3. Configure App:
+   - **Repository**: `gargkomalll/enterprise-hr-ai`
    - **Branch**: `main`
    - **Main file path**: `frontend/app.py`
-4. **Deploy!**: Click **"Deploy!"**. Streamlit Cloud will read `requirements.txt` and launch your live public app automatically!
+4. Expand **Advanced Settings** $\rightarrow$ Add Environment Variable:
+   - `BACKEND_URL`: `https://enterprise-hr-ai-backend.onrender.com`
+5. Click **Deploy!** Streamlit Cloud will launch your live workforce intelligence dashboard!
 
 ---
 
