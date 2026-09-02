@@ -18,15 +18,11 @@ env/
 *.log
 
 # Generated model files
-models/*.pkl
-models/*.joblib
+!models/*.joblib
+!models/**/*.joblib
 
-# Generated predictions
-data/predictions/
-
-# Raw/private datasets
-data/raw/
-data/external/
+# Processed datasets required by dashboard
+!data/processed/*.csv
 
 # OS
 .DS_Store
