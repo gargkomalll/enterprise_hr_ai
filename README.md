@@ -4,6 +4,14 @@ Enterprise HR AI is an agentic workforce intelligence platform that predicts emp
 
 ---
 
+## 🌐 Live Production Deployment Links
+
+- 🎈 **Live Streamlit Dashboard**: [https://enterprisehrai-6yrgwiess7dtkromxfbrau.streamlit.app](https://enterprisehrai-6yrgwiess7dtkromxfbrau.streamlit.app)
+- ⚙️ **Live Render FastAPI Backend**: [https://enterprise-hr-ai-backend.onrender.com](https://enterprise-hr-ai-backend.onrender.com)
+- 📄 **Interactive Swagger API Documentation**: [https://enterprise-hr-ai-backend.onrender.com/docs](https://enterprise-hr-ai-backend.onrender.com/docs)
+
+---
+
 ## 🏗️ System Architecture Overview
 
 ```mermaid
