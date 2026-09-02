@@ -103,14 +103,6 @@ python -m pytest tests/ -v
 
 ---
 
-## Docker Deployment
-
-```powershell
-docker-compose up --build
-```
-- Backend API: `http://localhost:8000`
-- Frontend Dashboard: `http://localhost:8501`
-
 ---
 
 ## API Endpoints List
