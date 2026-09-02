@@ -156,11 +156,14 @@ header[data-testid="stHeader"] * {{
     fill: var(--text) !important;
 }}
 
-/* Hide Deploy button and deployment toolbar completely */
-.stDeployButton,
-header[data-testid="stHeader"] .stDeployButton,
-[data-testid="stToolbar"] {{
-    display: none !important;
+[data-testid="stToolbar"] button,
+.stDeployButton button {{
+    color: var(--text) !important;
+    background: transparent !important;
+}}
+
+[data-testid="stToolbar"] button:hover {{
+    background: var(--surface) !important;
 }}
 
 [data-testid="stDecoration"] {{

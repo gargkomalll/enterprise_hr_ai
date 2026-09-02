@@ -124,6 +124,20 @@ python -m app.monitoring.rag_eval
 
 ---
 
+## ☁️ Streamlit Community Cloud Deployment Guide
+
+To deploy this app live on **Streamlit Community Cloud** (free cloud hosting):
+
+1. **Sign in to Streamlit Cloud**: Go to [share.streamlit.io](https://share.streamlit.io/) and log in with your GitHub account.
+2. **Create New App**: Click **"Create app"** $\rightarrow$ select **"Use existing repo"**.
+3. **Repository Settings**:
+   - **Repository**: `gargkomalll/enterprise-hr-ai` (or `gargkomalll/enterprise_hr_ai`)
+   - **Branch**: `main`
+   - **Main file path**: `frontend/app.py`
+4. **Deploy!**: Click **"Deploy!"**. Streamlit Cloud will read `requirements.txt` and launch your live public app automatically!
+
+---
+
 ## 🔌 API Endpoints List
 
 | Method | Endpoint | Description |

@@ -10,4 +10,6 @@ fastapi
 uvicorn
 pydantic
 streamlit
+plotly
+requests
 pytest
